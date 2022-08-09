@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { uiActions } from "../../store/ui-slice";
 import ProductItem from "./ProductItem";
 import classes from "./Products.module.css";
 
 const Products = (props) => {
 	const [products, setProducts] = useState([]);
 	const [error, setError] = useState(null);
+	const dispatch = useDispatch();
 
 	useEffect(() => {
 		const fetchData = async () => {
@@ -15,9 +18,17 @@ const Products = (props) => {
 			const data = await response.json();
 			setProducts(Object.entries(data));
 			console.log("data", Object.entries(data));
+			dispatch(
+				uiActions.showNotification({
+					message: "Products successfully fetched!",
+					status: "success",
+					title: "Fetch Products",
+				})
+			);
 		};
 		fetchData().catch((error) => setError(error.message));
-	}, [setProducts]);
+	}, [setProducts, dispatch]);
+  
 	return (
 		<section className={classes.products}>
 			<h2>Buy your favorite products</h2>
