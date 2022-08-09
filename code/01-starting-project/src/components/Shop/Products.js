@@ -1,34 +1,10 @@
-import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
-import { uiActions } from "../../store/ui-slice";
+import { useSelector } from "react-redux";
 import ProductItem from "./ProductItem";
 import classes from "./Products.module.css";
 
 const Products = (props) => {
-	const [products, setProducts] = useState([]);
-	const [error, setError] = useState(null);
-	const dispatch = useDispatch();
+	const products = useSelector((state) => state.products.items);
 
-	useEffect(() => {
-		const fetchData = async () => {
-			const response = await fetch(
-				"https://redux-store-test-default-rtdb.firebaseio.com/products.json"
-			);
-			if (!response.ok) throw new Error(response.body);
-			const data = await response.json();
-			setProducts(Object.entries(data));
-			console.log("data", Object.entries(data));
-			dispatch(
-				uiActions.showNotification({
-					message: "Products successfully fetched!",
-					status: "success",
-					title: "Fetch Products",
-				})
-			);
-		};
-		fetchData().catch((error) => setError(error.message));
-	}, [setProducts, dispatch]);
-  
 	return (
 		<section className={classes.products}>
 			<h2>Buy your favorite products</h2>

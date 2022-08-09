@@ -4,6 +4,7 @@ import Cart from "./components/Cart/Cart";
 import Layout from "./components/Layout/Layout";
 import Products from "./components/Shop/Products";
 import Notification from "./components/UI/Notification";
+import { fetchProducts } from "./store/product-slice";
 import { uiActions } from "./store/ui-slice";
 
 function App() {
@@ -11,15 +12,21 @@ function App() {
 	const notification = useSelector((state) => state.ui.notification);
 	const dispatch = useDispatch();
 	const showNotification = notification.isVisible;
+
+	useEffect(() => {
+		dispatch(fetchProducts());
+	}, [dispatch]);
+
 	useEffect(() => {
 		if (showNotification) {
 			const timer = setTimeout(
 				() => dispatch(uiActions.closeNotification()),
-				500
+				1000
 			);
 			return () => clearTimeout(timer);
 		}
 	}, [dispatch, showNotification]);
+
 	return (
 		<>
 			{showNotification && (
